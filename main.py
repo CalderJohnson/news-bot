@@ -3,7 +3,7 @@
 #config
 
 prefix = '!'
-token = 'OTQ0MDM4NzM5NDM5NjUyOTc0.Yg7ylg.tqkoGQYBotSvD-gAUDu4amolK_I'
+token = 'your-token'
 
 #imports
 
