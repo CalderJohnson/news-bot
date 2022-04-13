@@ -6,7 +6,7 @@ import os
 
 #args
 
-key = '59fe0571600c499c819ff5acf822d637'
+key = 'your-api-key'
 
 url = ('https://newsapi.org/v2/top-headlines?'
        'country=us&'
