@@ -1,28 +1,28 @@
 """Module for the bot for gathering data"""
-import requests
 import json
+import requests
 import discord
-import os
+from keys import API_KEY
 
 #args
 
-key = '59fe0571600c499c819ff5acf822d637'
-
-url = ('https://newsapi.org/v2/top-headlines?'
+URL = ('https://newsapi.org/v2/top-headlines?'
        'country=us&'
-       'apiKey='+key)
+       'apiKey='+API_KEY)
 
 #get news daily
 
 def get_news_data():
-    response = requests.get(url)
-    with open('newsdata.json', 'w') as newsdata:
+    """update newsdata.json"""
+    response = requests.get(URL)
+    with open('newsdata.json', 'w', encoding='utf-8') as newsdata:
         newsdata.truncate()
         json.dump(response.json(), newsdata)
 
 #format news for printing
 
 def format_news(article):
+    """create embed for an article"""
     message = discord.Embed(title=article["title"], url=article["url"], description=article["description"])
     message.set_thumbnail(url=article["urlToImage"])
     return message

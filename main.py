@@ -1,21 +1,21 @@
 """news bot"""
-
-#config
-
-prefix = '!'
-token = 'OTQ0MDM4NzM5NDM5NjUyOTc0.Yg7ylg.tqkoGQYBotSvD-gAUDu4amolK_I'
-
 #imports
 
 import datetime
-from datagatherer import format_news, get_news_data
-import discord
-from discord.ext import commands
 import json
+import discord
+from discord.ext.commands import Bot
+from datagatherer import format_news, get_news_data
+from keys import BOT_TOKEN
+
+#config
+
+PREFIX = '!'
+TOKEN = BOT_TOKEN
 
 #initialization
 
-client = commands.Bot(command_prefix=prefix)
+client = Bot(command_prefix=PREFIX)
 
 #events
 
@@ -27,23 +27,28 @@ async def on_ready():
     print("Bot online")
 
 @client.event
-async def on_guild_join(server):
-    """triggers on server join"""
-    print("Joining {0}".format(server.name))
+async def on_guild_join(guild):
+    """Triggers on server join"""
+    print(f'Joining {guild.name}')
+    await guild.create_text_channel("news")
+    channel = discord.utils.get(guild.channels, name="news")
+    await channel.send("Channel set!")
+    with open('serverdata.json', 'a', encoding='utf-8') as serverdata:
+        json.dump(channel.id, serverdata)
 
 #cmds
 
 @client.command(pass_context=True)
 async def news(ctx):
-    """post news to channel"""
-    with open('newsdata.json', 'r') as newsdata:
+    """Post news to channel"""
+    with open('newsdata.json', 'r', encoding='utf-8') as newsdata:
         get_news_data()
         newsfile = json.load(newsdata)
         articles = len(newsfile["articles"])
-        channel = client.get_channel(873760273964625980)
+        channel = discord.utils.get(ctx.guild.channels, name="news")
         today = str(datetime.date.today())
         await channel.send("**__News of " + today + "__**")
         for i in range(articles):
             await channel.send(embed=(format_news((newsfile["articles"])[i])))
-            
-client.run(token)
+
+client.run(TOKEN)
